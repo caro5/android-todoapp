@@ -19,8 +19,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_EDIT_ITEM_CODE = 20;
     ArrayList<TodoItem> items;
-    ArrayAdapter<TodoItem> itemsAdapter;
-    ListView lvItems;
+    TodoItemAdapter itemsAdapter;
+    ListView listView;
     EditText etnewItem;
 
     @Override
@@ -28,31 +28,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         etnewItem = (EditText) findViewById(R.id.etNewItem);
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        items = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.lvItems);
+        items = new ArrayList<TodoItem>();
         readItems();
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(itemsAdapter);
+        itemsAdapter = new TodoItemAdapter(this, items);
+        // itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(itemsAdapter);
         setUpListViewListener();
     }
 
 
     private void setUpListViewListener() {
         //Edit Item on click
-        lvItems.setOnItemClickListener(
+        listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         TodoItem selectedItem = itemsAdapter.getItem(position);
                         Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                         i.putExtra("itemText", selectedItem.text);
+                        i.putExtra("itemDate", selectedItem.dueDateStr);
                         i.putExtra("itemPosition", position);
                         startActivityForResult(i, REQUEST_EDIT_ITEM_CODE);
                     }
                 }
         );
         //Delete item on long click
-        lvItems.setOnItemLongClickListener(
+        listView.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapter,
@@ -101,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
             // Extract name value from result extras
             int itemPos = data.getIntExtra("itemPosition", -1);
             String itemText = data.getStringExtra("itemText");
-            items.set(itemPos, new TodoItem(itemText));
+            String dateString = data.getStringExtra("itemDate");
+
+            items.set(itemPos, new TodoItem(itemText, dateString));
             // Toast the name to display temporarily on screen
             Toast.makeText(this, "Updated todo to ".concat(itemText), Toast.LENGTH_SHORT).show();
             writeItems();

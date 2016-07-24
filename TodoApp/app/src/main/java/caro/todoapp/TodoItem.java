@@ -7,14 +7,14 @@ import java.util.Date;
  */
 public class TodoItem {
     public String text;
-    public Date dueDate;
+    public String dueDateStr;
 
     public TodoItem(String todoText) {
-        text = todoText;
+        this.text = todoText;
     }
 
-    public TodoItem(String todoText, Date date) {
-        text = todoText;
-        dueDate = date;
+    public TodoItem(String todoText, String dateStr) {
+        this.text = todoText;
+        this.dueDateStr = dateStr;
     }
 }
