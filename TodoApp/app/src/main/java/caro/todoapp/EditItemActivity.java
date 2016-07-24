@@ -61,7 +61,7 @@ public class EditItemActivity extends AppCompatActivity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         String selectedDate = sdf.format(datePicker.getCalendarView().getDate());
-
+        itemText = stringEdit.getText().toString();
         Intent data = new Intent();
         data.putExtra("itemText", itemText);
         data.putExtra("itemDate", selectedDate);
